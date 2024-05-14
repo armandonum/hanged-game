@@ -7,6 +7,9 @@ class MainClass
 {
     public static void Main(string[] args)
     {
+      Messages.ShowWelcome();
+      Messages.ShowRules();
+
       //  Console.WriteLine("Hello World!");
 
 
