@@ -1,62 +1,104 @@
-using System.Net.NetworkInformation;
+using System;
 
 class Game
 {
-
-private string secretWord;
-private string guessedWord;
-private int maxAttempts;
-private int attemptsLeft;
-private List<char> guessedLetters;
-
-    public  Game(int maxAttempts)
-
-    {
-            this.maxAttempts=maxAttempts;
-            this.attemptsLeft=maxAttempts;
-            this.guessedLetters=new List<char>();
+    private string secretWord;
+    private string secretDescription;
+    private string guessedWord;
+    private Player player;
+    private DatabaseHelper databaseHelper;
+    private int hintsLeft;
+string server, database, user, password;
+    public Game(int maxAttempts)
+    { 
+        conection(out server, out database, out user, out password);
+        player = new Player(maxAttempts);
+        databaseHelper = new DatabaseHelper(server, database, user, password);
+        hintsLeft = 2; // Number of hints available
     }
-    public void Star()
+
+    private static void conection(out string server, out string database, out string user, out string password)
+    {
+        server = "localhost";
+        database = "hangman_db";
+        user = "root";
+        password = "";
+        // Replace with your actual password
+    }
+
+    public void Start()
     {
         Messages.ShowWelcome();
         Messages.ShowRules();
-        WordBank wordBank = new WordBank();
-        secretWord = wordBank.GetRandomWord().ToUpper();
+        (secretWord, secretDescription) = databaseHelper.GetRandomWord();
+        if (secretWord == null)
+        {
+            Console.WriteLine("Error: No word found in the database.");
+            return;
+        }
         guessedWord = new string('_', secretWord.Length);
         PlayGame();
-       
     }
-        private void PlayGame()
+
+    private void PlayGame()
     {
-        while (attemptsLeft > 0 && !guessedWord.Equals(secretWord))
+        while (player.AttemptsLeft > 0 && !guessedWord.Equals(secretWord, StringComparison.OrdinalIgnoreCase))
         {
-            Console.WriteLine("Word: " + guessedWord);
+            DisplayGameStatus();
             char letter = InputReader.ReadLetter();
-            if (guessedLetters.Contains(letter))
+            if (player.GuessedLetters.Contains(letter))
             {
-                Console.WriteLine("You already guessed that letter. Try again.");
+                Messages.letterRepeated();
                 continue;
             }
-            guessedLetters.Add(letter);
-            if (secretWord.Contains(letter))
-            {
-                UpdateGuessedWord(letter);
-                Messages.ShowSuccess();
-            }
-            else
-            {
-                attemptsLeft--;
-                Messages.ShowFail(attemptsLeft);
-                HangmanDisplay.DrawHangman(attemptsLeft);
-            }
+            ProcessGussedLetter(letter);
+
         }
-        if (guessedWord.Equals(secretWord))
+        GameFinish();
+    }
+
+    private void ProcessGussedLetter(char letter)
+    {
+        player.AddGuessedLetter(letter);
+        if (secretWord.IndexOf(letter, StringComparison.OrdinalIgnoreCase) >= 0)
         {
-            Console.WriteLine("Congratulations! You guessed the word: " + secretWord);
+            UpdateGuessedWord(letter);
+            Messages.ShowSuccess();
         }
         else
         {
-            Console.WriteLine("Sorry, you ran out of attempts. The word was: " + secretWord);
+            player.DecrementAttempts();
+            Messages.ShowFail(player.AttemptsLeft);
+            HangmanDisplay.DrawHangman(player.AttemptsLeft);
+            if (hintsLeft > 0 &&AskForHint() )
+            {
+            
+                    ProvideHint();
+                    hintsLeft--;
+            }
+        }
+    }
+
+    private bool AskForHint(){
+        Console.Write("Would you like a hint? (y/n): ");
+        return Console.ReadLine().Trim().ToLower() == "y";
+    }
+
+    private void DisplayGameStatus()
+    {
+        Console.WriteLine("Word: " + guessedWord);
+        Console.WriteLine($"You have {hintsLeft} hints left.");
+    }
+
+    private void GameFinish()
+    {
+        if (guessedWord.Equals(secretWord, StringComparison.OrdinalIgnoreCase))
+        {
+            Messages.win(secretWord);
+        }
+        else
+        {
+            Messages.lose(secretWord);
             HangmanDisplay.DrawHangman(0);
         }
     }
@@ -67,12 +109,16 @@ private List<char> guessedLetters;
         char[] guessedChars = guessedWord.ToCharArray();
         for (int i = 0; i < secretChars.Length; i++)
         {
-            if (secretChars[i] == letter)
+            if (char.ToUpper(secretChars[i]) == char.ToUpper(letter))
             {
-                guessedChars[i] = letter;
+                guessedChars[i] = secretChars[i];
             }
         }
         guessedWord = new string(guessedChars);
     }
+
+    private void ProvideHint()
+    {
+        Console.WriteLine($"Hint: {secretDescription}");
+    }
 }
- 
