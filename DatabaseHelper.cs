@@ -12,7 +12,7 @@ public class DatabaseHelper
 
 
     /// <summary>
-    /// Get a random word and its description from the database
+    /// Get a random word and its description from the database.
     /// </summary>
     /// <reurns>Tuple containing the word and description</returns>
     public (string word, string description) GetRandomWord()
