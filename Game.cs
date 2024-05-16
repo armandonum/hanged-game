@@ -4,7 +4,7 @@ class Game
 {
     private string secretWord;
     private string secretDescription;
-    private string guessedWord;
+    private  string guessedWord;
     private Player player;
     private DatabaseHelper databaseHelper;
     private int hintsLeft;
@@ -14,7 +14,7 @@ string server, database, user, password;
         conection(out server, out database, out user, out password);
         player = new Player(maxAttempts);
         databaseHelper = new DatabaseHelper(server, database, user, password);
-        hintsLeft = 2; // Number of hints available
+        hintsLeft = 2; 
     }
 
     private static void conection(out string server, out string database, out string user, out string password)
@@ -23,7 +23,7 @@ string server, database, user, password;
         database = "hangman_db";
         user = "root";
         password = "";
-        // Replace with your actual password
+        
     }
 
     public void Start()
@@ -36,7 +36,7 @@ string server, database, user, password;
             Console.WriteLine("Error: No word found in the database.");
             return;
         }
-        guessedWord = new string('_', secretWord.Length);
+        guessedWord = new string('*', secretWord.Length);
         PlayGame();
     }
 
@@ -52,7 +52,6 @@ string server, database, user, password;
                 continue;
             }
             ProcessGussedLetter(letter);
-
         }
         GameFinish();
     }
@@ -72,7 +71,6 @@ string server, database, user, password;
             HangmanDisplay.DrawHangman(player.AttemptsLeft);
             if (hintsLeft > 0 &&AskForHint() )
             {
-            
                     ProvideHint();
                     hintsLeft--;
             }
@@ -80,11 +78,12 @@ string server, database, user, password;
     }
 
     private bool AskForHint(){
-        Console.Write("Would you like a hint? (y/n): ");
-        return Console.ReadLine().Trim().ToLower() == "y";
+       Messages.hint();
+       char option = InputReader.ReadLetter();
+        return option.ToString().Trim().ToLower() == "y";
     }
 
-    private void DisplayGameStatus()
+    public void DisplayGameStatus()
     {
         Console.WriteLine("Word: " + guessedWord);
         Console.WriteLine($"You have {hintsLeft} hints left.");
@@ -121,4 +120,6 @@ string server, database, user, password;
     {
         Console.WriteLine($"Hint: {secretDescription}");
     }
+
+
 }

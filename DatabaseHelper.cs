@@ -11,7 +11,7 @@ public class DatabaseHelper
     }
 
 
-/// <summary>
+    /// <summary>
     /// Get a random word and its description from the database
     /// </summary>
     /// <reurns>Tuple containing the word and description</returns>

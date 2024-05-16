@@ -72,6 +72,11 @@ public static class Messages
 
     }
 
+    public static void  hint()
+    {
+
+     Console.Write("Would you like a hint? (y/n): ");
+}
 
 
 }
