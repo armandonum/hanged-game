@@ -1,14 +1,14 @@
 using System.Net.NetworkInformation;
 
-class welcome
+class Game
 {
 
     // Main method begins execution of C# application
-    public welcome()
+    public  Game()
     {
-        System.Console.WriteLine("Welcome to C# Programming, good nice !");
+        // constructor
     }
-    public void show()
+    public void Star()
     {
         System.Console.WriteLine("Welcome to C# Programming!");
     }

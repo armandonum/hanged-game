@@ -7,14 +7,7 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-      Messages.ShowWelcome();
-      Messages.ShowRules();
-
-      //  Console.WriteLine("Hello World!");
-
-
-        welcome welcome = new welcome();
-        welcome.show();
-
+      Game game = new Game();
+        game.Star();
     }
 }

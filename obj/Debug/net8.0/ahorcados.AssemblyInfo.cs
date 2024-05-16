@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ahorcados")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c450535f58cb22275d70fac69c1b0427922a588")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3d5d3beaf4d9a7f5dbcf42eaf3cfe350b4fa35b")]
 [assembly: System.Reflection.AssemblyProductAttribute("ahorcados")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ahorcados")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
