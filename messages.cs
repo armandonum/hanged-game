@@ -23,6 +23,7 @@ public static class Messages
         Console.WriteLine("You have a limited number of attempts. ");
         Console.WriteLine("If you guess the word, you win. ");
         Console.WriteLine("If you run out of attempts, you lose. ");
+        Console.WriteLine("*************************************************");
 
     }
     /// <summary>
