@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/ahorcados.csproj": {}
+    "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/hangegGame-ApiRest/hangegGame-ApiRest.csproj": {}
   },
   "projects": {
-    "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/ahorcados.csproj": {
+    "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/hangegGame-ApiRest/hangegGame-ApiRest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/ahorcados.csproj",
-        "projectName": "ahorcados",
-        "projectPath": "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/ahorcados.csproj",
-        "packagesPath": "/home/armando/.nuget/packages/",
-        "outputPath": "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/obj/",
+        "projectUniqueName": "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/hangegGame-ApiRest/hangegGame-ApiRest.csproj",
+        "projectName": "hangegGame-ApiRest",
+        "projectPath": "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/hangegGame-ApiRest/hangegGame-ApiRest.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/mnt/8bed31c5-7f62-4ac4-8ced-3de5f19c90c5/semestre 2_2023/talleres de desarrollo de soft/modulo_6/juego-ahorcados/hanged game/hangegGame-ApiRest/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/armando/.nuget/NuGet/NuGet.Config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,13 +43,21 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Mvc": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Mvc.Core": {
               "target": "Package",
               "version": "[2.2.5, )"
             },
-            "MySql.Data": {
+            "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[8.4.0, )"
+              "version": "[8.0.5, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
             }
           },
           "imports": [

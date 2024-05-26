@@ -5,12 +5,12 @@ using System.Net.NetworkInformation;
 
 class MainClass
 {
-    public static void Main(string[] args)
-    {
+    // public static void Main(string[] args)
+    // {
     
-         Game game = new Game(7);
-         game.Start();
+    //      Game game = new Game(7);
+    //      game.Start();
         
 
-    }
+    // }
 }
