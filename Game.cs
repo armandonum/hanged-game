@@ -13,7 +13,7 @@ string server, database, user, password;
     { 
         conection(out server, out database, out user, out password);
         player = new Player(maxAttempts);
-        databaseHelper = new DatabaseHelper(server, database, user, password);
+        //databaseHelper = new DatabaseHelper(server, database, user, password);
         hintsLeft = 2; 
     }
 
