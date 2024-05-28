@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-
-
 public class GameService
 {
     private readonly DatabaseHelper databaseHelper;
@@ -11,46 +7,45 @@ public class GameService
     private int attemptsLeft;
     private int hintsLeft;
     private HashSet<char> guessedLetters;
-    //private Player player;
 
-    public GameService(DatabaseHelper databaseHelper)
+    public GameService(DatabaseHelper dbHelper)
     {
-        this.databaseHelper = databaseHelper;
-        //hintsLeft = 2;
-       //guessedLetters = new HashSet<char>();
-       StarNewGame();
-       
+        databaseHelper = dbHelper;
+        guessedLetters = new HashSet<char>();
     }
 
-    public void StarNewGame()
+    public void StartNewGame()
     {
-        (secretWord, secretDescription) = databaseHelper.GetRandomWord();
-        guessedWord=new string('*',secretWord.Length);
-        attemptsLeft = 7;
-        hintsLeft = 2;
+        var wordData = databaseHelper.GetRandomWord();
+       //var secredWord=databaseHelper.GetRandomWord();
+        
+        secretWord = wordData.word ?? string.Empty;
+        secretDescription = wordData.description ?? string.Empty;
+        guessedWord = new string('*', secretWord.Length);
+        attemptsLeft = 6; 
+        hintsLeft = 2; 
         guessedLetters.Clear();
     }
 
-
-
-    public string GetGuesseWord()=>guessedWord;
-    public string GetSecretDescription()=>secretDescription;
-    public int GetAttemptsLeft()=>attemptsLeft;
-    public int GetHintsLeft()=>hintsLeft;
-
-
-    public bool ProcessGuesess(char letter)
+    public bool ProcessGuess(char letter)
     {
-        if(guessedLetters.Contains(letter))
+        if (guessedLetters.Contains(letter) || string.IsNullOrEmpty(secretWord))
         {
             return false;
         }
 
         guessedLetters.Add(letter);
-
-        if(secretWord.IndexOf(letter,StringComparison.OrdinalIgnoreCase)>=0)
+        if (secretWord.Contains(letter))
         {
-            UpdateGuessedWord(letter);
+            var newGuessedWord = guessedWord.ToCharArray();
+            for (int i = 0; i < secretWord.Length; i++)
+            {
+                if (secretWord[i] == letter)
+                {
+                    newGuessedWord[i] = letter;
+                }
+            }
+            guessedWord = new string(newGuessedWord);
             return true;
         }
         else
@@ -60,23 +55,25 @@ public class GameService
         }
     }
 
-    public void UpdateGuessedWord(char letter)
+    public bool IsGameWon() => guessedWord.Equals(secretWord);
+
+    public bool IsGameOver() => attemptsLeft <= 0;
+
+    public string GetGuessedWord() => guessedWord;
+
+    public string GetSecretWord() => secretWord;
+
+    public string GetSecretDescription() => secretDescription;
+
+    public int GetAttemptsLeft() => attemptsLeft;
+
+    public int GetHintsLeft() => hintsLeft;
+
+    public void UseHint()
     {
-        char[] secretChars=secretWord.ToCharArray();
-        char[] guessedChars=guessedWord.ToCharArray();
-        for(int i=0 ; i<secretChars.Length;i++)
+        if (hintsLeft > 0)
         {
-            if(char.ToUpper(secretChars[i])==char.ToUpper(letter))
-
-            {
-                guessedChars[i]=secretChars[i];
-            }
+            hintsLeft--;
         }
-        guessedWord=new string(guessedChars);
     }
-
-    public bool IsGameWon()=>guessedWord.Equals(secretWord,StringComparison.OrdinalIgnoreCase);
-    public bool IsGameOver()=>attemptsLeft==0;
-    public void UseHint()=>hintsLeft--;
-
 }
