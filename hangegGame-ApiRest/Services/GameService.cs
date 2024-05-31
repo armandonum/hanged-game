@@ -1,79 +1,95 @@
+using System;
+using System.Collections.Generic;
+
 public class GameService
 {
     private readonly DatabaseHelper databaseHelper;
-    private string secretWord;
-    private string secretDescription;
-    private string guessedWord;
-    private int attemptsLeft;
-    private int hintsLeft;
-    private HashSet<char> guessedLetters;
+    private readonly Dictionary<Guid, GameData> games;
 
     public GameService(DatabaseHelper dbHelper)
     {
         databaseHelper = dbHelper;
-        guessedLetters = new HashSet<char>();
+        games = new Dictionary<Guid, GameData>();
     }
 
-    public void StartNewGame()
+    public Guid StartNewGame()
     {
         var wordData = databaseHelper.GetRandomWord();
-       //var secredWord=databaseHelper.GetRandomWord();
-        
-        secretWord = wordData.word ?? string.Empty;
-        secretDescription = wordData.description ?? string.Empty;
-        guessedWord = new string('*', secretWord.Length);
-        attemptsLeft = 6; 
-        hintsLeft = 2; 
-        guessedLetters.Clear();
+        var gameId = Guid.NewGuid();
+        var newGame = new GameData
+        {
+            SecretWord = wordData.word ?? string.Empty,
+            SecretDescription = wordData.description ?? string.Empty,
+            GuessedWord = new string('*', wordData.word?.Length ?? 0),
+            AttemptsLeft = 6,
+            HintsLeft = 2,
+            GuessedLetters = new HashSet<char>()
+        };
+        games[gameId] = newGame;
+        return gameId;
     }
 
-    public bool ProcessGuess(char letter)
+    public bool ProcessGuess(Guid gameId, char letter)
     {
-        if (guessedLetters.Contains(letter) || string.IsNullOrEmpty(secretWord))
+        if (!games.ContainsKey(gameId))
+            throw new ArgumentException("Invalid game ID.");
+
+        var game = games[gameId];
+        if (game.GuessedLetters.Contains(letter) || string.IsNullOrEmpty(game.SecretWord))
         {
             return false;
         }
 
-        guessedLetters.Add(letter);
-        if (secretWord.Contains(letter))
+        game.GuessedLetters.Add(letter);
+        if (game.SecretWord.Contains(letter))
         {
-            var newGuessedWord = guessedWord.ToCharArray();
-            for (int i = 0; i < secretWord.Length; i++)
+            var newGuessedWord = game.GuessedWord.ToCharArray();
+            for (int i = 0; i < game.SecretWord.Length; i++)
             {
-                if (secretWord[i] == letter)
+                if (game.SecretWord[i] == letter)
                 {
                     newGuessedWord[i] = letter;
                 }
             }
-            guessedWord = new string(newGuessedWord);
+            game.GuessedWord = new string(newGuessedWord);
             return true;
         }
         else
         {
-            attemptsLeft--;
+            game.AttemptsLeft--;
             return false;
         }
     }
 
-    public bool IsGameWon() => guessedWord.Equals(secretWord);
+    public bool IsGameWon(Guid gameId) => games.ContainsKey(gameId) && games[gameId].GuessedWord.Equals(games[gameId].SecretWord);
 
-    public bool IsGameOver() => attemptsLeft <= 0;
+    public bool IsGameOver(Guid gameId) => games.ContainsKey(gameId) && games[gameId].AttemptsLeft <= 0;
 
-    public string GetGuessedWord() => guessedWord;
+    public string GetGuessedWord(Guid gameId) => games.ContainsKey(gameId) ? games[gameId].GuessedWord : null;
 
-    public string GetSecretWord() => secretWord;
+    public string GetSecretWord(Guid gameId) => games.ContainsKey(gameId) ? games[gameId].SecretWord : null;
 
-    public string GetSecretDescription() => secretDescription;
+    public string GetSecretDescription(Guid gameId) => games.ContainsKey(gameId) ? games[gameId].SecretDescription : null;
 
-    public int GetAttemptsLeft() => attemptsLeft;
+    public int GetAttemptsLeft(Guid gameId) => games.ContainsKey(gameId) ? games[gameId].AttemptsLeft : 0;
 
-    public int GetHintsLeft() => hintsLeft;
+    public int GetHintsLeft(Guid gameId) => games.ContainsKey(gameId) ? games[gameId].HintsLeft : 0;
 
-    public void UseHint()
+    public void UseHint(Guid gameId)
     {
-        if (hintsLeft > 0)
+        if (games.ContainsKey(gameId) && games[gameId].HintsLeft > 0)
         {
-            hintsLeft--;
+            games[gameId].HintsLeft--;
         }
+    }
+
+    private class GameData
+    {
+        public string SecretWord { get; set; }
+        public string SecretDescription { get; set; }
+        public string GuessedWord { get; set; }
+        public int AttemptsLeft { get; set; }
+        public int HintsLeft { get; set; }
+        public HashSet<char> GuessedLetters { get; set; }
     }
 }
